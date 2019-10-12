@@ -13,27 +13,27 @@ var flashAndReload = function(noReload) {
   bm.clearHostResolverCache();
   bm.closeConnections();
 
-  if (!noReload && tabs) {
-    chrome.tabs.query({ currentWindow: true, active: true }, function(
-      tabArray
-    ) {
-      tabs.reload(tabArray[0].id, { bypassCache: true });
-      flashAndReloadComplete();
-    });
-  } else {
-    flashAndReloadComplete();
-  }
+  tabs.query({ currentWindow: true, active: true }, function(tabArray) {
+    // Drop the ELB cookie
+    chrome.cookies.remove(
+      {
+        url: tabArray[0].url,
+        name: "AWSELB"
+      },
+      function(deleted_cookie) {
+        console.log(deleted_cookie);
+        if (!noReload) {
+          tabs.reload(tabArray[0].id, { bypassCache: true });
+          flashAndReloadComplete();
+        } else {
+          flashAndReloadComplete();
+        }
+      }
+    );
+  });
 };
 
 chrome.browserAction.onClicked.addListener(function() {
-  flashAndReload();
-});
-
-chrome.contextMenus.create({
-  title: "Flush DNS and reload"
-});
-
-chrome.contextMenus.onClicked.addListener(function() {
   flashAndReload();
 });
 
@@ -75,3 +75,48 @@ setAutoReload(options);
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   setAutoReload(message);
 });
+
+var instanceName = "";
+
+// https://github.com/PayscaleNateW/http-header-extension
+chrome.webRequest.onHeadersReceived.addListener(
+  function(details) {
+    var headerFound = false;
+    for (var i in details.responseHeaders) {
+      if (details.responseHeaders[i].name == "X-Instance") {
+        console.log(details.responseHeaders[i].value);
+        instanceName = details.responseHeaders[i].value;
+        headerFound = true;
+        break;
+      }
+    }
+    if (!headerFound) {
+      instanceName = "";
+    }
+  },
+  { urls: ["<all_urls>"], types: ["main_frame"] },
+  ["blocking", "responseHeaders"]
+);
+
+// https://github.com/tinybigideas/WebsiteIP
+chrome.webRequest.onCompleted.addListener(
+  function(info) {
+    chrome.tabs.query({ currentWindow: true, active: true }, function(
+      tabArray
+    ) {
+      if (info.tabId == tabArray[0].id && instanceName != "") {
+        // console.log(info);
+        // console.log(info.ip);
+
+        chrome.tabs.executeScript({
+          code: 'updateUI("' + info.ip + '", "' + instanceName + '");'
+        });
+      }
+    });
+  },
+  {
+    urls: [],
+    types: ["main_frame"]
+  },
+  []
+);

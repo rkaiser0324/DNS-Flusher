@@ -19,6 +19,18 @@
   "background": {
     "scripts": ["background.js"]
   },
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": ["css/style.css"] 
+    }
+  ],
   "icons": {
     "16": "images/icon16.png",
     "48": "images/icon48.png",
@@ -26,7 +38,10 @@
   },
   "permissions": [
     "tabs",
-    "contextMenus"
+    "webRequest",
+    "webRequestBlocking",
+    "cookies",
+    "<all_urls>"
   ]
 }
 
