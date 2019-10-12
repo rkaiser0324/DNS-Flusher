@@ -21,8 +21,8 @@ sudo sed -i -- 's/\/usr\/bin\/google-chrome-stable/\/usr\/bin\/google-chrome-sta
 
  - Windows
 
-   - Right click on your "Chrome" icon
-   - Choose properties
+   - Right-click on your "Chrome" icon.  If it's pinned to the taskbar, close it and do `Shift` + right-click.
+   - Choose Properties
    - At the end of your target line add `--enable-net-benchmarking`
 
  - macOS
