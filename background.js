@@ -76,22 +76,22 @@ chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
   setAutoReload(message);
 });
 
-var instanceName = "";
+var page;
 
 // https://github.com/PayscaleNateW/http-header-extension
 chrome.webRequest.onHeadersReceived.addListener(
   function(details) {
-    var headerFound = false;
+    page = {
+      instanceName: "",
+      phpVersion: ""
+    };
     for (var i in details.responseHeaders) {
       if (details.responseHeaders[i].name == "X-Instance") {
-        console.log(details.responseHeaders[i].value);
-        instanceName = details.responseHeaders[i].value;
-        headerFound = true;
-        break;
+        page.instanceName = details.responseHeaders[i].value;
       }
-    }
-    if (!headerFound) {
-      instanceName = "";
+      if (details.responseHeaders[i].name == "X-PHP-Version") {
+        page.phpVersion = details.responseHeaders[i].value;
+      }
     }
   },
   { urls: ["<all_urls>"], types: ["main_frame"] },
@@ -104,12 +104,11 @@ chrome.webRequest.onCompleted.addListener(
     chrome.tabs.query({ currentWindow: true, active: true }, function(
       tabArray
     ) {
-      if (info.tabId == tabArray[0].id && instanceName != "") {
-        // console.log(info);
-        // console.log(info.ip);
-
+      if (info.tabId == tabArray[0].id) {
+        // console.log('executing updateDnsFlusherStatusUI')
+        page.ip = info.ip;
         chrome.tabs.executeScript({
-          code: 'updateUI("' + info.ip + '", "' + instanceName + '");'
+          code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
         });
       }
     });

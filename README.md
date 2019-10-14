@@ -4,7 +4,7 @@ This is a Chrome extension which allows you to easily flush the DNS cache. It wa
 
 1. Fixed a critical bug in the tab-reloading logic.
 1. Additionally delete the current tab's AWSELB cookie, if it exists.
-1. If the `X-Instance` header is set, overlay it on the page along with the IP address, with inspiration from tinybigideas' [WebsiteIP](https://github.com/tinybigideas/WebsiteIP).
+1. If the `X-Instance` header is set, overlay it on the page along with the IP address and `X-PHP-Version` header.  Thanks to tinybigideas' [WebsiteIP](https://github.com/tinybigideas/WebsiteIP) for the inspiration.
 
 ## Chrome Configuration
 
@@ -21,7 +21,7 @@ sudo sed -i -- 's/\/usr\/bin\/google-chrome-stable/\/usr\/bin\/google-chrome-sta
 
 ### Windows
 
-1. Right-click on your "Chrome" icon.  If it's pinned to the taskbar, close it and do `Shift` + right-click.
+1. Right-click on the Chrome icon.  If it's pinned to the taskbar, close it and do `Shift` + right-click.
 1. Choose Properties
 1. At the end of the target line add `--enable-net-benchmarking`
 
