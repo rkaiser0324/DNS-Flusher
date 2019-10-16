@@ -21,7 +21,7 @@ var flashAndReload = function(noReload) {
         name: "AWSELB"
       },
       function(deleted_cookie) {
-        console.log(deleted_cookie);
+        console.log('Deleted cookie', deleted_cookie);
         if (!noReload) {
           tabs.reload(tabArray[0].id, { bypassCache: true });
           flashAndReloadComplete();
@@ -89,7 +89,7 @@ chrome.webRequest.onHeadersReceived.addListener(
       if (details.responseHeaders[i].name == "X-Instance") {
         page.instanceName = details.responseHeaders[i].value;
       }
-      if (details.responseHeaders[i].name == "X-PHP-Version") {
+      if (details.responseHeaders[i].name == "X-PHP-Version" && details.responseHeaders[i].value != "(null)") {
         page.phpVersion = details.responseHeaders[i].value;
       }
     }
@@ -105,8 +105,8 @@ chrome.webRequest.onCompleted.addListener(
       tabArray
     ) {
       if (info.tabId == tabArray[0].id) {
-        // console.log('executing updateDnsFlusherStatusUI')
         page.ip = info.ip;
+        console.log('executing updateDnsFlusherStatusUI', page);
         chrome.tabs.executeScript({
           code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
         });
@@ -119,3 +119,5 @@ chrome.webRequest.onCompleted.addListener(
   },
   []
 );
+
+console.log('background.js loaded');
