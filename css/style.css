@@ -4,7 +4,7 @@
     background: #F1EDED;
     padding: 5px;
     border: 1px solid #919191;
-    font-size: 12px;
+    font-size: 14px;
     color: #333;
     font-family: 'Arial', Helvetica, sans-serif;
     cursor: default;
@@ -17,6 +17,18 @@
     -webkit-user-select: none;
     user-select: none;
     right: 1%;
+}
+
+#dns_flusher_page_status div.x {
+    width:100%;
+    text-align:right;
+}
+
+#dns_flusher_page_status a {
+    color:#333;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 18px;
 }
 
 /* hide if in print view */

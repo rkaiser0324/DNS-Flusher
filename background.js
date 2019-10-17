@@ -106,7 +106,7 @@ chrome.webRequest.onCompleted.addListener(
     ) {
       if (info.tabId == tabArray[0].id) {
         page.ip = info.ip;
-        console.log('executing updateDnsFlusherStatusUI', page);
+        //console.log('executing updateDnsFlusherStatusUI', page);
         chrome.tabs.executeScript({
           code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
         });
