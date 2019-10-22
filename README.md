@@ -1,4 +1,4 @@
-# DNS Flusher Plus Plus
+# DigiPowers DNS Flusher++
 
 This is a Chrome extension which allows you to easily flush the DNS cache. It was forked from int64ago's [DNS Flusher Plus](https://github.com/int64ago/DNS-Flusher), with the following enhancements:
 
@@ -35,15 +35,18 @@ cd "/Applications/Google Chrome.app/Contents/MacOS/" && mv "Google Chrome" Googl
 
 ## Usage
 
-Install the extension by using [developer mode](https://developer.chrome.com/extensions/getstarted); it can be [debugged](https://developer.chrome.com/extensions/tut_debugging#locate_logs) via the normal process.
+You can install the extension from either:
+- The Chrome Web Store
+- By using [developer mode](https://developer.chrome.com/extensions/getstarted), clicking the "Load unpacked" button, and then navigating to the DNS-Flusher directory.  The extension can then be [debugged](https://developer.chrome.com/extensions/tut_debugging#locate_logs) via the normal process.
 
 You can then flush the DNS cache by doing either of the following:
-
- - Click the icon in the toolbar
- - Use the keyboard shortcut (if not otherwise occupied): `Command+Shift+F` for Mac or `Ctrl+Shift+F` for others
+ - Clicking the button in the toolbar
+ - Using the keyboard shortcut (if not otherwise occupied): `Command+Shift+F` for Mac or `Ctrl+Shift+F` for others
 
 On the Options panel you can optionally set an automatic refresh rate.
 
 ## Maintainer
 
-This extension is maintained by [Rolf Kaiser](https://www.github.com/rkaiser0324).
+This extension is maintained by [DigiPowers, Inc.](https://www.digipowers.com).  
+
+No warranty or support is provided - only use it if you know what you're doing.

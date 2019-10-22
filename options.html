@@ -1,50 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>DNS Flusher++ Settings</title>
+    <link rel="stylesheet" href="/css/bulma.min.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Settings</title>
-  <style>
-    .container {
-      margin: 100px auto;
-      width: 400px;
-    }
-    .section {
-      margin: 5px 0;
-    }
-    fieldset {
-      border: 1px solid #ddd;
-      padding: 10px;
-    }
-    h1 {
-      text-align: center;
-    }
-    input {
-      vertical-align: middle;
-    }
-  </style>
-</head>
+  <body>
+    <body>
+      <section class="section">
+        <div class="container">
+          <div class="columns">
+            <div class="column is-6 is-offset-3">
+              <h1 class="title has-text-centered">DNS Flusher++ Settings</h1>
+              <div class="notification">
+                <div class="field">
+                  <label class="label">Auto-Refresh Interval (s)</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      type="number"
+                      min="0"
+                      step="1"
+                      id="interval"
+                    />
+                  </div>
+                  <p class="help">Set to 0 to disable</p>
+                </div>
+              </div>
 
-<body>
-  <div class="container">
-    <form>
-      <h1>Settings</h1>
-      <fieldset>
-        <legend>Auto Refresh</legend>
-        <div class="section">
-          <label>Enabled:</label>
-          <input type="checkbox" id="enable">
+              <div class="level">
+                <div class="level-left">
+                  <div class="level-item">
+                    <figure class="image is-48x48">
+                      <img src="/images/icon48.png" />
+                    </figure>
+                  </div>
+                  <div class="level-item">
+                    <p>
+                      This extension was developed by
+                      <a href="https://www.digipowers.com">DigiPowers, Inc.</a>
+                    </p>
+                  </div>
+                </div>
+                <div class="level-right">
+                  <p><a href="https://github.com/rkaiser0324/DNS-Flusher">View on GitHub</a></p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="section">
-          <label>Interval(s):</label>
-          <input type="number" min="0" step="1" id="interval">
-        </div>
-      </fieldset>
-    </form>
-  </div>
-  <script src="options.js"></script>
-</body>
+      </section>
+    </body>
 
+    <script src="options.js"></script>
+  </body>
 </html>

@@ -1,10 +1,11 @@
 {
-  "name": "DNS Flusher Plus",
-  "version": "1.2.1",
+  "name": "DigiPowers DNS Flusher++",
+  "short_name": "DNS Flusher++",
+  "version": "2.0.0",
   "manifest_version": 2,
-  "description": "Flash DNS cache by one click",
+  "description": "Flush the DNS cache, clear any AWS ELB cookies, and get detailed response information with one click.",
   "browser_action": {
-    "default_title": "Flush DNS and reload"
+    "default_title": "DNS Flusher++"
   },
   "commands": {
     "flash-and-reload": {
@@ -17,7 +18,8 @@
   },
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js"],
+    "css": "css/bulma.min.css"
   },
   "content_scripts": [
     {
@@ -28,7 +30,9 @@
       "js": [
         "content.js"
       ],
-      "css": ["css/style.css"] 
+      "css": [
+        "css/style.css"
+      ] 
     }
   ],
   "icons": {

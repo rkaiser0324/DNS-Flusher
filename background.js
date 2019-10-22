@@ -14,22 +14,24 @@ var flashAndReload = function(noReload) {
   bm.closeConnections();
 
   tabs.query({ currentWindow: true, active: true }, function(tabArray) {
-    // Drop the ELB cookie
-    chrome.cookies.remove(
-      {
-        url: tabArray[0].url,
-        name: "AWSELB"
-      },
-      function(deleted_cookie) {
-        console.log('Deleted cookie', deleted_cookie);
-        if (!noReload) {
-          tabs.reload(tabArray[0].id, { bypassCache: true });
-          flashAndReloadComplete();
-        } else {
-          flashAndReloadComplete();
+    if (tabArray[0].url.match(/^http/)) {
+      // Drop the ELB cookie
+      chrome.cookies.remove(
+        {
+          url: tabArray[0].url,
+          name: "AWSELB"
+        },
+        function(deleted_cookie) {
+          console.log("Deleted cookie", deleted_cookie);
+          if (!noReload) {
+            tabs.reload(tabArray[0].id, { bypassCache: true });
+            flashAndReloadComplete();
+          } else {
+            flashAndReloadComplete();
+          }
         }
-      }
-    );
+      );
+    }
   });
 };
 
@@ -44,7 +46,6 @@ chrome.commands.onCommand.addListener(function(cmd) {
 });
 
 var options = {
-  enable: localStorage.getItem("auto.refresh.enable") === "true",
   interval: (localStorage.getItem("auto.refresh.interval") || 0) / 1
 };
 
@@ -57,7 +58,7 @@ function clearAutoReload() {
 }
 
 function setAutoReload(options) {
-  if (options.enable && options.interval) {
+  if (options.interval > 0) {
     if (autoReload) {
       clearAutoReload();
     }
@@ -89,12 +90,15 @@ chrome.webRequest.onHeadersReceived.addListener(
       if (details.responseHeaders[i].name == "X-Instance") {
         page.instanceName = details.responseHeaders[i].value;
       }
-      if (details.responseHeaders[i].name == "X-PHP-Version" && details.responseHeaders[i].value != "(null)") {
+      if (
+        details.responseHeaders[i].name == "X-PHP-Version" &&
+        details.responseHeaders[i].value != "(null)"
+      ) {
         page.phpVersion = details.responseHeaders[i].value;
       }
     }
   },
-  { urls: ["<all_urls>"], types: ["main_frame"] },
+  { urls: [], types: ["main_frame"] },
   ["blocking", "responseHeaders"]
 );
 
@@ -105,11 +109,13 @@ chrome.webRequest.onCompleted.addListener(
       tabArray
     ) {
       if (info.tabId == tabArray[0].id) {
-        page.ip = info.ip;
-        //console.log('executing updateDnsFlusherStatusUI', page);
-        chrome.tabs.executeScript({
-          code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
-        });
+        if (info.url.match(/^http/)) {
+          page.ip = info.ip;
+          //console.log('executing updateDnsFlusherStatusUI', page);
+          chrome.tabs.executeScript({
+            code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
+          });
+        }
       }
     });
   },
@@ -120,4 +126,4 @@ chrome.webRequest.onCompleted.addListener(
   []
 );
 
-console.log('background.js loaded');
+console.log("background.js loaded");
