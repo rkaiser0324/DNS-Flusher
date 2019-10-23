@@ -84,7 +84,8 @@ chrome.webRequest.onHeadersReceived.addListener(
   function(details) {
     page = {
       instanceName: "",
-      phpVersion: ""
+      phpVersion: "",
+      proxyCache: ""
     };
     for (var i in details.responseHeaders) {
       if (details.responseHeaders[i].name == "X-Instance") {
@@ -95,6 +96,9 @@ chrome.webRequest.onHeadersReceived.addListener(
         details.responseHeaders[i].value != "(null)"
       ) {
         page.phpVersion = details.responseHeaders[i].value;
+      }
+      if (details.responseHeaders[i].name == "X-Proxycache") {
+        page.proxyCache = details.responseHeaders[i].value;
       }
     }
   },

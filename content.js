@@ -17,10 +17,13 @@ var updateDnsFlusherStatusUI = function(pageJson) {
   div_instance.className = "instance";
   div_php_version = document.createElement("div");
   div_php_version.className = "php_version";
+  div_proxy_cache = document.createElement("div");
+  div_proxy_cache.className = "proxy_cache";
 
   div_right.appendChild(div_ip);
   div_right.appendChild(div_instance);
   div_right.appendChild(div_php_version);
+  div_right.appendChild(div_proxy_cache);
   div.appendChild(div_left);
   div.appendChild(div_right);
   document.body.appendChild(div);
@@ -30,6 +33,7 @@ var updateDnsFlusherStatusUI = function(pageJson) {
     page.instanceName;
   document.querySelector("#dns_flusher_page_status .php_version").innerText =
     page.phpVersion == "" ? "" : "PHP " + page.phpVersion;
+  document.querySelector("#dns_flusher_page_status .proxy_cache").innerText = page.proxyCache == "" ? "" : "Cache " + page.proxyCache;
 
   div.addEventListener(
     "click",

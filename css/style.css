@@ -12,6 +12,7 @@
     right: 5px; 
     transition: 0.4s;
     border-radius: 5px;
+    line-height: 1.5em;
 }
 
 #dns_flusher_page_status:hover
