@@ -23,6 +23,33 @@ var flashAndReload = function(noReload) {
         },
         function(deleted_cookie) {
           console.log("Deleted cookie", deleted_cookie);
+
+          var url = new URL(tabArray[0].url);
+          chrome.cookies.getAll({
+            domain: url.host
+          }, function(cookieArray) {
+            console.log(cookieArray);
+          });
+
+          // https://github.com/jamesdbloom/delete-all-cookies doesn't look like it uses callbacks properly
+          // This sets a timeout before reload:  https://chromium.googlesource.com/chromium/src/+/master/chrome/common/extensions/docs/examples/api/cookies/manager.js?autodive=0%2F
+
+          // chrome.cookies.remove(
+          //   {
+          //     url: tabArray[0].url,
+          //     name: "AWSELB"
+          //   },
+          //   function(deleted_cookie) {
+          //     console.log("Deleted cookie", deleted_cookie);
+          //     if (!noReload) {
+          //       tabs.reload(tabArray[0].id, { bypassCache: true });
+          //       flashAndReloadComplete();
+          //     } else {
+          //       flashAndReloadComplete();
+          //     }
+          //   }
+          // );
+
           if (!noReload) {
             tabs.reload(tabArray[0].id, { bypassCache: true });
             flashAndReloadComplete();
