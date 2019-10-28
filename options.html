@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>DNS Flusher++ Settings</title>
+    <title>DigiPowers DNS Flusher++</title>
     <link rel="stylesheet" href="/css/bulma.min.css" />
   </head>
 
@@ -14,8 +14,13 @@
         <div class="container">
           <div class="columns">
             <div class="column is-6 is-offset-3">
-              <h1 class="title has-text-centered">DNS Flusher++ Settings</h1>
-              <div class="notification">
+              <h1 class="title has-text-centered">DigiPowers DNS Flusher++</h1>
+
+              <div id="benchmarking-notification" style="display:none" class="notification is-warning">
+                Chrome needs to have the <code>--enable-net-benchmarking</code> flag enabled to run this extension.  <a href="https://github.com/rkaiser0324/DNS-Flusher">See the instructions</a> for details.
+              </div>
+
+              <div class="notification" id="settings-form">
                 <div class="field">
                   <label class="label">Auto-Refresh Interval (s)</label>
                   <div class="control">
