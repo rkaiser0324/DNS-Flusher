@@ -3,10 +3,11 @@ var flashAndReload = function(noReload) {
     tabs = chrome.tabs,
     flashAndReloadComplete = function() {
       console.log("[flashAndReload]");
+      localStorage.removeItem("overlay_dismissed");
     };
 
   if (!bm) {
-    tabs.create({ url: "https://goo.gl/vSh9im" });
+    chrome.runtime.openOptionsPage();
     return;
   }
 
@@ -74,7 +75,19 @@ function setAutoReload(options) {
 setAutoReload(options);
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  setAutoReload(message);
+  if (sender.tab)
+  {
+    // From content script
+    localStorage.setItem("overlay_dismissed", 1);
+  }
+  else
+  {
+    // From options page
+    setAutoReload(message);
+  }
+  sendResponse({
+    success: true
+  });
 });
 
 var page;
@@ -109,19 +122,23 @@ chrome.webRequest.onHeadersReceived.addListener(
 // https://github.com/tinybigideas/WebsiteIP
 chrome.webRequest.onCompleted.addListener(
   function(info) {
-    chrome.tabs.query({ currentWindow: true, active: true }, function(
-      tabArray
-    ) {
-      if (info.tabId == tabArray[0].id) {
-        if (info.url.match(/^http/)) {
-          page.ip = info.ip;
-          //console.log('executing updateDnsFlusherStatusUI', page);
-          chrome.tabs.executeScript({
-            code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
-          });
+    var dismissed = (localStorage.getItem("overlay_dismissed") || 0) == 1;
+
+    if (!dismissed) {
+      chrome.tabs.query({ currentWindow: true, active: true }, function(
+        tabArray
+      ) {
+        if (info.tabId == tabArray[0].id) {
+          if (info.url.match(/^http/)) {
+            page.ip = info.ip;
+            console.log("executing updateDnsFlusherStatusUI", page);
+            chrome.tabs.executeScript({
+              code: "updateDnsFlusherStatusUI('" + JSON.stringify(page) + "');"
+            });
+          }
         }
-      }
-    });
+      });
+    }
   },
   {
     urls: [],

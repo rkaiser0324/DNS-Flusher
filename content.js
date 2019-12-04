@@ -6,12 +6,12 @@ var updateDnsFlusherStatusUI = function(pageJson) {
     var div = document.createElement("div");
     div.id = "dns_flusher_page_status";
 
-    var div_left = document.createElement("div");
-    div_left.className = "left";
-    div_left.innerHTML = "<div> &harr; </div>";
+    var div_dismiss = document.createElement("div");
+    div_dismiss.className = "dismiss";
+    div_dismiss.innerHTML = '<a href="#">&times;</a>';
 
-    var div_right = document.createElement("div");
-    div_right.className = "right";
+    var div_info = document.createElement("div");
+    div_info.className = "info";
 
     var div_ip = document.createElement("div");
     div_ip.className = "ip";
@@ -22,12 +22,12 @@ var updateDnsFlusherStatusUI = function(pageJson) {
     div_proxy_cache = document.createElement("div");
     div_proxy_cache.className = "proxy_cache";
 
-    div_right.appendChild(div_ip);
-    div_right.appendChild(div_instance);
-    div_right.appendChild(div_php_version);
-    div_right.appendChild(div_proxy_cache);
-    div.appendChild(div_left);
-    div.appendChild(div_right);
+    div_info.appendChild(div_ip);
+    div_info.appendChild(div_instance);
+    div_info.appendChild(div_php_version);
+    div_info.appendChild(div_proxy_cache);
+    div.appendChild(div_dismiss);
+    div.appendChild(div_info);
     document.body.appendChild(div);
 
     document.querySelector("#dns_flusher_page_status .ip").innerText = page.ip;
@@ -38,40 +38,93 @@ var updateDnsFlusherStatusUI = function(pageJson) {
     document.querySelector("#dns_flusher_page_status .proxy_cache").innerText =
       page.proxyCache == "" ? "" : "Cache " + page.proxyCache;
 
-    div.addEventListener(
+    document.querySelector("#dns_flusher_page_status a").addEventListener(
       "click",
       function(event) {
         event.preventDefault();
+        var elem = document.querySelector("#dns_flusher_page_status");
+        elem.parentNode.removeChild(elem);
 
-        var d = document.getElementById("dns_flusher_page_status");
-        if (hasClass(d, "offscreen")) {
-          d.style.right = "5px";
-          removeClass(d, "offscreen");
-        } else {
-          var buttonWidth = document.querySelector(
-            "#dns_flusher_page_status .left"
-          ).offsetWidth;
-          d.style.right = -(d.offsetWidth - buttonWidth - 10) + "px";
-          addClass(d, "offscreen");
-        }
+        chrome.runtime.sendMessage({action: "dismiss"}, function(response) {
+          //console.log(response);
+        });
       },
       false
     );
 
-    // Helper functions from https://stackoverflow.com/a/28344281 and http://jaketrent.com/post/addremove-classes-raw-javascript/
-    function hasClass(ele, cls) {
-      return !!ele.className.match(new RegExp("(\\s|^)" + cls + "(\\s|$)"));
-    }
+    /**
+     * Makes an element draggable.
+     *
+     * https://jsfiddle.net/remarkablemark/93gfvjmw/
+     *
+     * @param {HTMLElement} element - The element.
+     */
+    function draggable(element) {
+      var isMouseDown = false;
 
-    function addClass(ele, cls) {
-      if (!hasClass(ele, cls)) ele.className += " " + cls;
-    }
+      // initial mouse X and Y for `mousedown`
+      var mouseX;
+      var mouseY;
 
-    function removeClass(ele, cls) {
-      if (hasClass(ele, cls)) {
-        var reg = new RegExp("(\\s|^)" + cls + "(\\s|$)");
-        ele.className = ele.className.replace(reg, " ");
+      // https://gist.github.com/joshcarr/2f861bd37c3d0df40b30
+      var w = window,
+        d = document,
+        e = d.documentElement,
+        g = d.getElementsByTagName("body")[0],
+        windowWidth = w.innerWidth || e.clientWidth || g.clientWidth,
+        windowHeight = w.innerHeight || e.clientHeight || g.clientHeight;
+
+      // element X and Y before and after move
+      var elementX = windowWidth - 5 - 150;
+      var elementY = 5;
+
+      // mouse button down over the element
+      element.addEventListener("mousedown", onMouseDown);
+
+      /**
+       * Listens to `mousedown` event.
+       *
+       * @param {Object} event - The event.
+       */
+      function onMouseDown(event) {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+        isMouseDown = true;
+      }
+
+      // mouse button released
+      element.addEventListener("mouseup", onMouseUp);
+
+      /**
+       * Listens to `mouseup` event.
+       *
+       * @param {Object} event - The event.
+       */
+      function onMouseUp(event) {
+        isMouseDown = false;
+        elementX = parseInt(element.style.left) || 0;
+        elementY = parseInt(element.style.top) || 0;
+      }
+
+      // need to attach to the entire document
+      // in order to take full width and height
+      // this ensures the element keeps up with the mouse
+      document.addEventListener("mousemove", onMouseMove);
+
+      /**
+       * Listens to `mousemove` event.
+       *
+       * @param {Object} event - The event.
+       */
+      function onMouseMove(event) {
+        if (!isMouseDown) return;
+        var deltaX = event.clientX - mouseX;
+        var deltaY = event.clientY - mouseY;
+        element.style.left = elementX + deltaX + "px";
+        element.style.top = elementY + deltaY + "px";
       }
     }
+
+    draggable(div);
   }
 };
