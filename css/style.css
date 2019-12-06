@@ -35,6 +35,7 @@
 {
     font-size:large;
     color: #333;
+    text-decoration:none;
 }
 #dns_flusher_page_status .dismiss a:hover
 {
