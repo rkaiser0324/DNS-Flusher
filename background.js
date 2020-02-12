@@ -16,20 +16,27 @@ var flashAndReload = function(noReload) {
 
   tabs.query({ currentWindow: true, active: true }, function(tabArray) {
     if (tabArray[0].url.match(/^http/)) {
-      // Drop the ELB cookie
+      // Drop the 2 ELB cookies
       chrome.cookies.remove(
         {
           url: tabArray[0].url,
           name: "AWSELB"
         },
         function(deleted_cookie) {
-          console.log("Deleted cookie", deleted_cookie);
-          if (!noReload) {
-            tabs.reload(tabArray[0].id, { bypassCache: true });
-            flashAndReloadComplete();
-          } else {
-            flashAndReloadComplete();
-          }
+          chrome.cookies.remove(
+            {
+              url: tabArray[0].url,
+              name: "AWSELBCORS"
+            },
+            function(deleted_cookie) {
+              if (!noReload) {
+                tabs.reload(tabArray[0].id, { bypassCache: true });
+                flashAndReloadComplete();
+              } else {
+                flashAndReloadComplete();
+              }
+            }
+          );
         }
       );
     }
